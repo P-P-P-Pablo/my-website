@@ -1,0 +1,25 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  --light-pink: hsla(0, 100%, 84%, 1);
+  --deep-champagne: hsla(33, 100%, 82%, 1);
+  --lemon-yellow-crayola: hsla(62, 100%, 86%, 1);
+  --tea-green: hsla(110, 100%, 87%, 1);
+  --electric-blue: hsla(185, 100%, 80%, 1);
+  --baby-blue-eyes: hsla(217, 100%, 81%, 1);
+  --maximum-blue-purple: hsla(249, 100%, 85%, 1);
+  --mauve: hsla(300, 100%, 89%, 1);
+  --baby-powder: hsla(60, 100%, 99%, 1);
+  
+  background-color: var(--light-pink);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
