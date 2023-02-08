@@ -1,0 +1,40 @@
+[
+  {
+    "jobTitle": "Industry 4.0 Analyst",
+    "companyName": "Dymasco",
+    "fromTo": "Sep 2022 - Dec 2022",
+    "missions": [
+      "Technical Design",
+      "Configuration and deployment of MOM Solutions",
+      "Participation in corporate community life"
+    ],
+    "technos": ["HTML/CSS", "Javascript", "C#", "SQL", "Delmia Apriso"],
+    "companyLogo": "dymasco.jpeg"
+  },
+  {
+    "jobTitle": "Developer-integrator",
+    "companyName": "Foederis",
+    "fromTo": "Sep 2021 - Aug 2022",
+    "missions": [
+      "Custom feature development",
+      "Management and maintenance of HRIS",
+      "Participation in corporate community life",
+      "DB management",
+      "Technical and functional support"
+    ],
+    "technos": ["HTML/CSS", "Javascript", "SQL", "Infinite Blue"],
+    "companyLogo": "foederis.jpeg"
+  },
+  {
+    "jobTitle": "Front-end Developer trainee",
+    "companyName": "360Medics",
+    "fromTo": "Jan 2021 - Jun 2021",
+    "missions": [
+      "Create review sheets, quizzes, and special files as apps",
+      "Format datas",
+      "Worked with design and marketing team"
+    ],
+    "technos": ["HTML/CSS", "Javascript", "Vuejs", "Angular", "NodeJs"],
+    "companyLogo": "360medics.jpg"
+  }
+]

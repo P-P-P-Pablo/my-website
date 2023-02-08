@@ -12,8 +12,10 @@ defineProps({
 
 <template>
     <div class="job-card">
-        <div class="company-logo">
-            <img :src="companyLogo" />
+        <div class="company">
+            <div class="company-logo">
+                <img :src="companyLogo" />
+            </div>
             <h4 class="company-name">{{ companyName }}</h4>
         </div>
         <div class="infos">
@@ -54,6 +56,7 @@ defineProps({
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
+    margin-top: 80px;
 }
 
 .infos {
@@ -91,6 +94,27 @@ defineProps({
     align-items: left;
     justify-content: space-between;
     padding: 0;
+    margin: 0 30px
+}
+
+.company {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: start;
+    height: 100%;
+}
+
+.company-name {
+    transition: all 1s ease-in-out 0.1s;
+    color: var(--lemon-yellow-crayola);
+    font-family: MuseoModerno;
+}
+
+.company:hover .company-name {
+    display: block;
+    color: black;
+    text-shadow: 2px 1px 2px rgba(100, 100, 100, 0.5);
 }
 
 .company-logo {
@@ -111,12 +135,9 @@ defineProps({
     max-height: 100px;
 }
 
-.company-name {
-    display: none;
-}
+
 
 .job-title {
-    width: 200px;
     height: 100px;
     font-family: MuseoModerno;
     font-size: 36px;
@@ -127,10 +148,9 @@ defineProps({
 }
 
 .fromto {
-    width: 260px;
     height: 100px;
     font-family: MuseoModerno;
-    font-size: 36px;
+    font-size: 24px;
     font-weight: 400;
     display: flex;
     align-items: center;
