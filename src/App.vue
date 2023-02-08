@@ -10,7 +10,7 @@ import Menu from './components/Menu.vue'
 </template>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Press+Start+2P&family=MuseoModerno&display=swap');
 
 .app {
   padding: 10px
