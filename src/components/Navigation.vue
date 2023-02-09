@@ -13,10 +13,10 @@
             </div>
             <div class="menu-item cv">
                 <router-link to="/cv" class="link">
-                    <img src="../assets/cv-ico.svg" alt="Curriculum" />
+                    <img src="../assets/cv-ico.svg" alt="Resume" />
 
                 </router-link>
-                <p class="menu-name">CV</p>
+                <p class="menu-name">Resume</p>
             </div>
             <div class="menu-item projects">
                 <router-link to="/projects" class="link">
