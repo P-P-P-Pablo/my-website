@@ -2,10 +2,12 @@
 import JobCard from '../components/JobCard.vue';
 import Title from '../components/Title.vue';
 import CVJSON from '../assets/CV.json';
+import ResumeButton from '../components/ResumeButton.vue';
 </script>
 
 <template>
     <div class="main-body">
+        <ResumeButton class="resume" />
         <Title class="title" title='My previous positions' />
         <JobCard v-for="(job, i) in CVJSON" :jobTitle="job.jobTitle" :companyName="job.companyName" :fromTo="job.fromTo"
             :missions="job.missions" :technos="job.technos" :companyLogo="job.companyLogo" :key="i" />
@@ -21,5 +23,11 @@ import CVJSON from '../assets/CV.json';
 
 .title {
     margin-bottom: 100px;
+}
+
+.resume {
+    position: absolute;
+    top: 50px;
+    right: 50px;
 }
 </style>

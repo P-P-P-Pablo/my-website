@@ -72,6 +72,7 @@
     color: var(--light-pink);
     transition: all 1s ease-in-out 0.1s;
     font-family: Lobster;
+    font-size: 12px;
 }
 
 .menu-item:hover .menu-name {
@@ -80,5 +81,4 @@
 
     text-shadow: 2px 1px 2px rgba(100, 100, 100, 0.5);
 }
-
 </style>

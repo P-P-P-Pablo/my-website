@@ -1,15 +1,46 @@
 <script setup>
 defineProps({
-    width: Number,
-    length: Number,
-    rotation: Number,
-    scaleMax: Number,
-    scaleMin: Number
+    width: {
+        type: Number,
+        required: false,
+        default: 100
+    },
+    length: {
+        type: Number,
+        required: false,
+        default: 100
+    },
+    rotation: {
+        type: Number,
+        required: false,
+        default: 0
+    },
+    scaleMax: {
+        type: Number,
+        required: false,
+        default: 1.1
+    },
+    scaleMin: {
+        type: Number,
+        required: false,
+        default: 0.9
+    },
+    color:{
+        type: String,
+        required: false,
+        default: "#ffc6ffff"
+    },
+    delay:{
+        type: Number,
+        required: false,
+        default: 0
+    }
 })
 </script>
 
 <template>
-    <div class="arrow" :style="`--width: ${width}px; --length: ${length}px; --rotation: ${rotation}deg; --scalemax: ${scaleMax}; --scalemin: ${scaleMin};`">
+    <div class="arrow"
+        :style="`--width: ${width}px; --length: ${length}px; --rotation: ${rotation}deg; --scalemax: ${scaleMax}; --scalemin: ${scaleMin}; --arrowcolor: ${color}; --delay: ${delay}ms`">
         <div class="arrow-body"></div>
         <div class="arrow-point"></div>
     </div>
@@ -24,6 +55,7 @@ defineProps({
     width: var(--width);
     height: var(--length);
     animation: pulse 1s infinite ease-in-out alternate;
+    animation-delay: var(--delay);
 }
 
 .arrow-point {
@@ -31,15 +63,13 @@ defineProps({
     height: 0;
     border-left: calc(0.4 * var(--width)) solid transparent;
     border-right: calc(0.4 * var(--width)) solid transparent;
-    border-top: calc(0.5 * var(--length)) solid var(--mauve);
-    filter: drop-shadow(8px 10px 4px rgba(100, 100, 100, 0.3));
+    border-top: calc(0.5 * var(--length)) solid var(--arrowcolor);
 }
 
 .arrow-body {
     width: 40%;
     height: 66%;
-    background-color: var(--mauve);
-    box-shadow: 8px 10px 4px rgba(100, 100, 100, 0.3);
+    background-color: var(--arrowcolor);
 }
 
 
