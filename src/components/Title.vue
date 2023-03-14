@@ -14,7 +14,8 @@ defineProps({
 h1 {
   text-shadow: 8px 10px 4px rgba(100, 100, 100, 0.5);
   font-family: Lobster;
-  font-size: 96px;
+  font-size: 48px;
+  line-height: 48px;
   font-weight: 400;
   text-align: center;
   color: black;

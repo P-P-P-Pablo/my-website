@@ -164,7 +164,7 @@ function toggleContent() {
   
 <style scoped>
 .article {
-    width: 1000px;
+    max-width: 1000px;
     border-radius: 30px;
     background: hsla(217, 100%, 81%, 0.5);
     box-shadow: 8px 10px 4px rgba(100, 100, 100, 0.3);
@@ -223,7 +223,7 @@ img {
 
 .github {
     position: fixed;
-    top: 15px;
+    top: 150px;
     right: 15px;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;

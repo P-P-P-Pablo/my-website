@@ -33,7 +33,7 @@ defineProps({
                     </ul>
                 </div>
                 <div class="technos">
-                    <h3>Technos</h3>
+                    <h3>Techs</h3>
                     <ul class="technos list">
                         <li v-for="(techno, j) in technos" :key="j">
                             {{ techno }}
@@ -47,16 +47,16 @@ defineProps({
 
 <style scoped>
 .job-card {
-    width: 1000px;
-    height: 400px;
+    width: 100%;
+    max-width: 600px;
     border-radius: 30px;
     background-color: var(--lemon-yellow-crayola);
     opacity: 0.8;
     box-shadow: 8px 10px 4px rgba(100, 100, 100, 0.3);
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
     align-items: center;
-    margin-top: 80px;
+    margin-top: 30px;
 }
 
 .infos {
@@ -64,8 +64,6 @@ defineProps({
     flex-flow: column nowrap;
     align-items: center;
     justify-content: space-evenly;
-    height: 100%;
-    width: 830px;
 }
 
 .top {
@@ -74,18 +72,23 @@ defineProps({
     align-items: center;
     justify-content: space-evenly;
     width: 100%;
-    margin-top: 20px;
 
 }
 
 .bottom {
     display: flex;
+    width: 90%;
     flex-flow: row nowrap;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-evenly;
-    width: 100%;
     margin-bottom: 20px;
     font-family: 'Press Start 2P';
+    font-size: 10px;
+    line-height: 12px;
+}
+
+.missions {
+    margin-left: 30px;
 }
 
 .list {
@@ -94,7 +97,8 @@ defineProps({
     align-items: left;
     justify-content: space-between;
     padding: 0;
-    margin: 0 30px
+    margin: 0 30px;
+    line-height: 18px;
 }
 
 .company {
@@ -102,7 +106,6 @@ defineProps({
     flex-flow: column nowrap;
     align-items: center;
     justify-content: start;
-    height: 100%;
 }
 
 .company-name {
@@ -121,26 +124,23 @@ defineProps({
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 130px;
-    height: 130px;
-    margin: 20px;
+    margin-top: 20px;
     border-radius: 30px;
     background-color: white;
     box-shadow: 8px 10px 4px rgba(100, 100, 100, 0.3);
-    top: -50px;
 }
 
 .company-logo img {
-    max-width: 100px;
-    max-height: 100px;
+    width: 100px;
+    height: 100px;
+    border-radius: 30px;
 }
 
 
 
 .job-title {
-    height: 100px;
     font-family: MuseoModerno;
-    font-size: 36px;
+    font-size: 16px;
     font-weight: 400;
     text-align: right;
     display: flex;
@@ -150,7 +150,7 @@ defineProps({
 .fromto {
     height: 100px;
     font-family: MuseoModerno;
-    font-size: 24px;
+    font-size: 12px;
     font-weight: 400;
     display: flex;
     align-items: center;

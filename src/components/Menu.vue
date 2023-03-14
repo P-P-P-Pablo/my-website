@@ -8,29 +8,21 @@ import Navigation from './Navigation.vue';
         <img class="logo" src="..\assets\logo2.png" />
         <Navigation />
     </div>
-    
 </template>
 
 <style scoped>
 .main-menu {
-    position: fixed;
-    flex-flow: column;
+    display: flex;
+    flex-flow: row;
     align-items: center;
-    width: 250px;
-    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+    margin: 20px;
 }
 
 .logo {
-    position: relative;
-    top: 50px;
-    left: 50px;
-    width: 150px;
+    max-width: 150px;
+    width: 25%;
     height: auto;
-}
-
-.navigation {
-    position: relative;
-    top: 100px;
-    left: 50px;
 }
 </style>

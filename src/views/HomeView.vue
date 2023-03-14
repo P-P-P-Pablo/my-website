@@ -36,16 +36,28 @@ onMounted(() => {
                 challenge that's both fun and fulfilling.</p>
         </div>
     </div>
-
 </template>
 
 <style scoped>
+@media (min-width: 900px) {
+    .main-body {
+        margin-top: -150px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .photoslider {
+        display: none;
+    }
+}
+
 .pres {
     font-family: 'Press Start 2P';
+    width: 100%;
     max-width: 1000px;
 }
 
 p {
-    margin: 20px 0;
+    margin: 5% 0;
 }
 </style>

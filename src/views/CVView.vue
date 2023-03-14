@@ -22,12 +22,15 @@ import ResumeButton from '../components/ResumeButton.vue';
 }
 
 .title {
-    margin-bottom: 100px;
+    margin-bottom: 50px;
 }
 
-.resume {
-    position: absolute;
-    top: 50px;
-    right: 50px;
+@media (min-width: 900px) {
+    .resume {
+        position: absolute;
+    }
+    .title {
+    margin-top: 160px;
+}
 }
 </style>
