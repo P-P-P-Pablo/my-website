@@ -20,6 +20,5 @@ import Menu from './components/Menu.vue'
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  margin-left: 50px;
 }
 </style>

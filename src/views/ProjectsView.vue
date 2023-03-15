@@ -12,11 +12,10 @@ import Title from '../components/Title.vue';
 </template>
 
 <style scoped>
-.main-body {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    margin-left: 300px;
+@media (min-width: 900px) {
+  .main-body {
+    margin-top: -150px;
+  }
 }
 
 .title {

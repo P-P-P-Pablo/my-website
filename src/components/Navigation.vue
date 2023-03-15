@@ -28,30 +28,31 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <style scoped>
 .navigation {
-    width: fit-content;
+    width: 60%;
+    max-width: 210px;
+    
+    margin-right: 50px;
 }
 
 .nav-body {
-    width: 150px;
-    height: 40px;
+    width: 100%;
     background-color: var(--baby-blue-eyes);
-
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-evenly;
     align-items: center;
     overflow: visible;
-
+    border-radius: 10px;
+    padding: 5px;
 }
 
 .link {
-    width: 25px;
-    height: 25px;
+    width: 40px;
+    height: 40px;
     align-content: center;
     justify-content: center;
     flex-flow: column nowrap;
@@ -63,8 +64,8 @@
 }
 
 .menu-item {
-    width: 25px;
-    height: 25px;
+    width: 40px;
+    height: 40px;
     overflow: visible;
 }
 

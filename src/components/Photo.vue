@@ -12,8 +12,9 @@ defineProps({
 
 <style scoped>
 .photo {
-    width: 300px;
-    height: 300px;
+    width: 20%;
+    max-width: 300px;
+    max-height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
