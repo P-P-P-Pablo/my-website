@@ -140,7 +140,7 @@ defineProps({
 
 .job-title {
     font-family: MuseoModerno;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
     text-align: right;
     display: flex;
@@ -150,7 +150,7 @@ defineProps({
 .fromto {
     height: 100px;
     font-family: MuseoModerno;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 400;
     display: flex;
     align-items: center;
