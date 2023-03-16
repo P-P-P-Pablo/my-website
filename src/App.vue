@@ -4,7 +4,7 @@ import Menu from './components/Menu.vue'
 
 <template>
   <div class="app">
-    <Menu />
+    <!-- <Menu /> -->
     <router-view />
   </div>
 </template>
@@ -12,9 +12,7 @@ import Menu from './components/Menu.vue'
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Press+Start+2P&family=MuseoModerno&display=swap');
 
-.app {
-  padding: 10px
-}
+
 
 .main-body {
   display: flex;

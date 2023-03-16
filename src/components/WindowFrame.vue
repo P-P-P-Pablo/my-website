@@ -9,16 +9,21 @@ const state = reactive({
     pos3: 0,
     pos4: 0,
     touchID: 0,
-    collapsed: false
+    collapsed: false,
+    prevPosition: { top: 0, left: 0 },
+    fullscreen: false,
 })
 
 defineProps({
     title: String,
+    position: { top: Number, left: Number },
 })
+
+const emit = defineEmits(['savePosition', 'close']);
 
 function dragStart(event) {
     event.preventDefault();
-    // get the mouse cursor position at startup:
+    if (state.fullscreen) return;
     state.pos3 = event.clientX;
     state.pos4 = event.clientY;
     if (event.changedTouches && event.changedTouches.length == 1) {
@@ -26,19 +31,16 @@ function dragStart(event) {
     }
     document.onmouseup = closeDragElement;
     document.ontouchend = closeDragElement;
-    // call a function whenever the cursor moves:
     document.onmousemove = elementDrag;
     document.ontouchmove = touchDrag;
 }
 
 function elementDrag(event) {
     event.preventDefault();
-    // calculate the new cursor position:
     state.pos1 = state.pos3 - event.clientX;
     state.pos2 = state.pos4 - event.clientY;
     state.pos3 = event.clientX;
     state.pos4 = event.clientY;
-    // set the element's new position:
     window.value.style.top = (window.value.offsetTop - state.pos2) + "px";
     window.value.style.left = (window.value.offsetLeft - state.pos1) + "px";
 }
@@ -48,12 +50,10 @@ function touchDrag(event) {
     if (event.changedTouches.length == 1) {
         const touch = event.changedTouches[0];
         if (touch.identifier == state.touchID) {
-            // calculate the new cursor position:
             state.pos1 = state.pos3 - touch.clientX;
             state.pos2 = state.pos4 - touch.clientY;
             state.pos3 = touch.clientX;
             state.pos4 = touch.clientY;
-            // set the element's new position:
             window.value.style.top = (window.value.offsetTop - state.pos2) + "px";
             window.value.style.left = (window.value.offsetLeft - state.pos1) + "px";
         }
@@ -61,7 +61,6 @@ function touchDrag(event) {
 }
 
 function closeDragElement() {
-    /* stop moving when mouse button is released:*/
     document.onmouseup = null;
     document.onmousemove = null;
 
@@ -70,20 +69,41 @@ function closeDragElement() {
 }
 
 function collapseWindow() {
-    state.collapsed = !state.collapsed
+    state.collapsed = !state.collapsed;
+    emit('savePosition', { top: window.value.offsetTop, left: window.value.offsetLeft });
+}
+
+function toggleFullscreen() {
+    state.fullscreen = !state.fullscreen;
+    if (state.fullscreen) {
+        state.prevPosition = { top: window.value.offsetTop, left: window.value.offsetLeft };
+        window.value.style.top = 0 + "px";
+        window.value.style.left = 0 + "px";
+        window.value.style.width = '100%';
+        window.value.style.height = '100%';
+        emit('savePosition', { top: 0, left: 0 });
+    } else {
+        window.value.style.width = 'auto';
+        window.value.style.height = 'auto';
+        window.value.style.top = state.prevPosition.top + "px";
+        window.value.style.left = state.prevPosition.left + "px";
+        // Restore the previous position when exiting fullscreen
+        emit('savePosition', state.prevPosition);
+    }
 }
 
 </script>
 
 <template>
-    <div class="window" ref="window">
+    <div class="window" ref="window" :style="{ top: position.top + 'px', left: position.left + 'px' }">
         <div class="window-header" @mousedown="dragStart" @touchstart="dragStart">
             <span>{{ title }}</span>
             <div class="buttons">
                 <button @click="collapseWindow">{{ state.collapsed ? '□' : '_' }}</button>
-                <button>X</button>
+                <button @click="toggleFullscreen">{{ state.fullscreen ? '⛶' : '⛶' }}</button>
+                <button
+                    @click="$emit('savePosition', { top: window.value.offsetTop, left: window.value.offsetLeft }); $emit('close');">X</button>
             </div>
-
         </div>
         <div class="content" :class="state.collapsed ? 'collapsed' : ''">
             <slot></slot>
@@ -91,9 +111,10 @@ function collapseWindow() {
     </div>
 </template>
 
+
 <style scoped>
 .window {
-    position: absolute;
+    position: fixed;
     border: 3px solid #f1f1f1;
     box-shadow: 8px 10px 4px rgba(100, 100, 100, 0.3);
 }
