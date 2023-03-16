@@ -1,13 +1,13 @@
 <script setup>
 import { ref, reactive } from 'vue'
 
-const window = ref(null)
+const windowRef = ref(null)
 
 const state = reactive({
-    pos1: 0,
-    pos2: 0,
-    pos3: 0,
-    pos4: 0,
+    diffX: 0,
+    diffY: 0,
+    prevX: 0,
+    prevY: 0,
     touchID: 0,
     collapsed: false,
     prevPosition: { top: 0, left: 0 },
@@ -21,11 +21,12 @@ defineProps({
 
 const emit = defineEmits(['savePosition', 'close']);
 
+// Handle dragging start for desktop
 function dragStart(event) {
     event.preventDefault();
     if (state.fullscreen) return;
-    state.pos3 = event.clientX;
-    state.pos4 = event.clientY;
+    state.prevX = event.clientX;
+    state.prevY = event.clientY;
     if (event.changedTouches && event.changedTouches.length == 1) {
         state.touchID = event.changedTouches[0].identifier;
     }
@@ -35,31 +36,34 @@ function dragStart(event) {
     document.ontouchmove = touchDrag;
 }
 
+// Handle dragging for desktop
 function elementDrag(event) {
     event.preventDefault();
-    state.pos1 = state.pos3 - event.clientX;
-    state.pos2 = state.pos4 - event.clientY;
-    state.pos3 = event.clientX;
-    state.pos4 = event.clientY;
-    window.value.style.top = (window.value.offsetTop - state.pos2) + "px";
-    window.value.style.left = (window.value.offsetLeft - state.pos1) + "px";
+    state.diffX = state.prevX - event.clientX;
+    state.diffY = state.prevY - event.clientY;
+    state.prevX = event.clientX;
+    state.prevY = event.clientY;
+    windowRef.value.style.top = (windowRef.value.offsetTop - state.diffY) + "px";
+    windowRef.value.style.left = (windowRef.value.offsetLeft - state.diffX) + "px";
 }
 
+// Handle dragging for touch devices
 function touchDrag(event) {
     event.preventDefault();
     if (event.changedTouches.length == 1) {
         const touch = event.changedTouches[0];
         if (touch.identifier == state.touchID) {
-            state.pos1 = state.pos3 - touch.clientX;
-            state.pos2 = state.pos4 - touch.clientY;
-            state.pos3 = touch.clientX;
-            state.pos4 = touch.clientY;
-            window.value.style.top = (window.value.offsetTop - state.pos2) + "px";
-            window.value.style.left = (window.value.offsetLeft - state.pos1) + "px";
+            state.diffX = state.prevX - touch.clientX;
+            state.diffY = state.prevY - touch.clientY;
+            state.prevX = touch.clientX;
+            state.prevY = touch.clientY;
+            windowRef.value.style.top = (windowRef.value.offsetTop - state.diffY) + "px";
+            windowRef.value.style.left = (windowRef.value.offsetLeft - state.diffX) + "px";
         }
     }
 }
 
+// Handle dragging end
 function closeDragElement() {
     document.onmouseup = null;
     document.onmousemove = null;
@@ -68,41 +72,42 @@ function closeDragElement() {
     document.ontouchmove = null;
 }
 
+// Collapse and expand the window
 function collapseWindow() {
     state.collapsed = !state.collapsed;
-    emit('savePosition', { top: window.value.offsetTop, left: window.value.offsetLeft });
+    emit('savePosition', { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft });
 }
 
+// Toggle fullscreen mode
 function toggleFullscreen() {
     state.fullscreen = !state.fullscreen;
     if (state.fullscreen) {
-        state.prevPosition = { top: window.value.offsetTop, left: window.value.offsetLeft };
-        window.value.style.top = 0 + "px";
-        window.value.style.left = 0 + "px";
-        window.value.style.width = '100%';
-        window.value.style.height = '100%';
+        state.prevPosition = { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft };
+        windowRef.value.style.top = 0 + "px";
+        windowRef.value.style.left = 0 + "px";
+        windowRef.value.style.width = '100%';
+        windowRef.value.style.height = '100%';
         emit('savePosition', { top: 0, left: 0 });
     } else {
-        window.value.style.width = 'auto';
-        window.value.style.height = 'auto';
-        window.value.style.top = state.prevPosition.top + "px";
-        window.value.style.left = state.prevPosition.left + "px";
+        windowRef.value.style.width = 'auto';
+        windowRef.value.style.height = 'auto';
+        windowRef.value.style.top = state.prevPosition.top + "px";
+        windowRef.value.style.left = state.prevPosition.left + "px";
         // Restore the previous position when exiting fullscreen
         emit('savePosition', state.prevPosition);
     }
 }
-
 </script>
 
 <template>
-    <div class="window" ref="window" :style="{ top: position.top + 'px', left: position.left + 'px' }">
+    <div class="window" ref="windowRef" :style="{ top: position.top + 'px', left: position.left + 'px' }">
         <div class="window-header" @mousedown="dragStart" @touchstart="dragStart">
             <span>{{ title }}</span>
             <div class="buttons">
-                <button @click="collapseWindow">{{ state.collapsed ? '□' : '_' }}</button>
-                <button @click="toggleFullscreen">{{ state.fullscreen ? '⛶' : '⛶' }}</button>
+                <button v-if="!state.fullscreen" @click="collapseWindow">{{ state.collapsed ? '□' : '_' }}</button>
+                <button v-if="!state.collapsed" @click="toggleFullscreen">{{ state.fullscreen ? '⛶' : '⛶' }}</button>
                 <button
-                    @click="$emit('savePosition', { top: window.value.offsetTop, left: window.value.offsetLeft }); $emit('close');">X</button>
+                    @click="$emit('savePosition', { top: windowRef.offsetTop, left: windowRef.offsetLeft }); $emit('close');">X</button>
             </div>
         </div>
         <div class="content" :class="state.collapsed ? 'collapsed' : ''">
@@ -110,7 +115,6 @@ function toggleFullscreen() {
         </div>
     </div>
 </template>
-
 
 <style scoped>
 .window {
@@ -128,7 +132,6 @@ function toggleFullscreen() {
     cursor: move;
 }
 
-
 .content {
     height: fit-content;
     width: fit-content;
@@ -142,3 +145,4 @@ function toggleFullscreen() {
     display: none;
 }
 </style>
+

@@ -49,14 +49,11 @@ defineProps({
 .job-card {
     width: 100%;
     max-width: 600px;
-    border-radius: 30px;
     background-color: var(--lemon-yellow-crayola);
-    opacity: 0.8;
     box-shadow: 8px 10px 4px rgba(100, 100, 100, 0.3);
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    margin-top: 30px;
 }
 
 .infos {

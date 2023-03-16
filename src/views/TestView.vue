@@ -3,19 +3,6 @@ import { ref, reactive } from 'vue';
 import JobCard from '../components/JobCard.vue';
 import WindowFrame from '../components/WindowFrame.vue';
 
-/* const job = {
-    jobTitle: "Front-end Developer trainee",
-    companyName: "360Medics",
-    fromTo: "Jan 2021 - Jun 2021",
-    missions: [
-        "Create review sheets, quizzes, and special files as apps",
-        "Format datas",
-        "Worked with design and marketing team"
-    ],
-    technos: ["HTML/CSS", "Javascript", "Vuejs", "Angular", "NodeJs"],
-    companyLogo: "360medics.jpg"
-}; */
-
 const maxWindows = 10;
 let nextWindowIndex = ref(1);
 const windows = reactive([{
@@ -37,13 +24,13 @@ const windows = reactive([{
     }
 }])
 
-
+// Adds a new window to the list of windows
 function addWindow() {
     if (nextWindowIndex.value < maxWindows) {
+        const id = nextWindowIndex.value++;
         windows.push({
-            id: nextWindowIndex,
-            visible: false,
-            position: { top: 100, left: 100 },
+            id,
+            position: { top: 50 + 30 * (id % 6), left: 50 + 30 * (id % 6) },
             component: JobCard,
             props: {
                 jobTitle: "Front-end Developer trainee",
@@ -57,35 +44,34 @@ function addWindow() {
                 technos: ["HTML/CSS", "Javascript", "Vuejs", "Angular", "NodeJs"],
                 companyLogo: "360medics.jpg"
             }
-        })
-        nextWindowIndex.value++;
+        });
+    }
+};
+
+// Handles closing a window by removing it from the windows list
+function handleClose(id) {
+    windows.value = windows.value.filter((window) => window.id !== id);
+}
+
+// Handles saving the position of a window
+function handleSavePosition(id, position) {
+    const windowToUpdate = windows.find((window) => window.id === id);
+    if (windowToUpdate) {
+        windowToUpdate.position = position;
     }
 }
-
-function handleClose(index) {
-    windows.splice(index, 1);
-    if (nextWindowIndex.value > 0) {
-        nextWindowIndex.value--;
-    }
-}
-
-function handleSavePosition(index, position) {
-    windows[index].position = position;
-}
-
 </script>
 
 <template>
     <div class="main-body">
         <button class="addwindow" @click="addWindow">Add Window</button>
-        <WindowFrame v-for="(window, index) in windows" :key="window.id" :title="`Window ${window.id}`"
-            :style="{ zIndex: '+' + window.id }" :position="window.position" @close="handleClose(index)"
-            @savePosition="(position) => handleSavePosition(index, position)">
+        <WindowFrame v-for="window in windows" :key="window.id" :title="`Window ${window.id}`"
+            :style="{ zIndex: '+' + window.id }" :position="window.position" @close="handleClose(window.id)"
+            @savePosition="(position) => handleSavePosition(window.id, position)">
             <component :is="window.component" v-bind="window.props"></component>
         </WindowFrame>
     </div>
 </template>
-
 
 <style scoped>
 .main-body {
@@ -93,7 +79,6 @@ function handleSavePosition(index, position) {
     height: 100vh;
     width: 100vw;
 }
-
 
 .addwindow {
     position: absolute;
