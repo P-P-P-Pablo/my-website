@@ -1,11 +1,14 @@
 <script setup>
 import Menu from './components/Menu.vue'
+import TestView from './views/TestView.vue';
 </script>
 
 <template>
   <div class="app">
     <!-- <Menu /> -->
-    <router-view />
+    <!-- <router-view /> -->
+    <TestView />
+
   </div>
 </template>
 

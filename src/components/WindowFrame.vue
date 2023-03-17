@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 
-const windowRef = ref(null)
+const windowRef = ref()
 
 const state = reactive({
     diffX: 0,
@@ -16,15 +16,22 @@ const state = reactive({
 
 defineProps({
     title: String,
-    position: { top: Number, left: Number },
+    position: { top: Number, left: Number, zIndex: Number },
 })
 
-const emit = defineEmits(['savePosition', 'close']);
+const emit = defineEmits(['savePosition', 'close', 'bringtofront']);
+
+// Set the window's position
+function setPosition(top, left) {
+    windowRef.value.style.top = top + "px";
+    windowRef.value.style.left = left + "px";
+}
 
 // Handle dragging start for desktop
 function dragStart(event) {
     event.preventDefault();
     if (state.fullscreen) return;
+    emit('bringtofront');
     state.prevX = event.clientX;
     state.prevY = event.clientY;
     if (event.changedTouches && event.changedTouches.length == 1) {
@@ -83,16 +90,15 @@ function toggleFullscreen() {
     state.fullscreen = !state.fullscreen;
     if (state.fullscreen) {
         state.prevPosition = { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft };
-        windowRef.value.style.top = 0 + "px";
-        windowRef.value.style.left = 0 + "px";
+        setPosition(0, 0);
         windowRef.value.style.width = '100%';
         windowRef.value.style.height = '100%';
         emit('savePosition', { top: 0, left: 0 });
+        emit('bringtofront');
     } else {
         windowRef.value.style.width = 'auto';
         windowRef.value.style.height = 'auto';
-        windowRef.value.style.top = state.prevPosition.top + "px";
-        windowRef.value.style.left = state.prevPosition.left + "px";
+        setPosition(state.prevPosition.top, state.prevPosition.left);
         // Restore the previous position when exiting fullscreen
         emit('savePosition', state.prevPosition);
     }
@@ -100,14 +106,17 @@ function toggleFullscreen() {
 </script>
 
 <template>
-    <div class="window" ref="windowRef" :style="{ top: position.top + 'px', left: position.left + 'px' }">
+    <div class="window" :ref="windowRef"
+        :style="{ top: position.top + 'px', left: position.left + 'px', zIndex: position.zIndex }">
         <div class="window-header" @mousedown="dragStart" @touchstart="dragStart">
             <span>{{ title }}</span>
             <div class="buttons">
                 <button v-if="!state.fullscreen" @click="collapseWindow">{{ state.collapsed ? '□' : '_' }}</button>
                 <button v-if="!state.collapsed" @click="toggleFullscreen">{{ state.fullscreen ? '⛶' : '⛶' }}</button>
+                <!-- Emit savePosition and close events with appropriate data -->
                 <button
-                    @click="$emit('savePosition', { top: windowRef.offsetTop, left: windowRef.offsetLeft }); $emit('close');">X</button>
+                    @click="() => { emit('savePosition', { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft }); emit('close'); }">X</button>
+
             </div>
         </div>
         <div class="content" :class="state.collapsed ? 'collapsed' : ''">
