@@ -1,112 +1,19 @@
 <script setup>
-import { ref, reactive, computed } from 'vue';
-import JobCard from '../components/JobCard.vue';
 import WindowFrame from '../components/WindowFrame.vue';
-import ResumeButton from '../components/ResumeButton.vue';
-import FunkyTitle from '../components/FunkyTitle.vue';
-import jobData from '../assets/CV.json';
+import { useWindowsStore } from '../stores/windowsStore';
 
-const maxWindows = 10;
-let nextWindowIndex = ref(0);
-const windows = reactive([])
-
-function generateAvailableComponents(jobData) {
-    const components = {};
-
-    jobData.forEach((job, index) => {
-        components[`jobcard_${index}`] = {
-            component: JobCard,
-            props: job,
-        };
-    });
-
-    return components;
-}
-
-const availableComponents = computed(() => ({
-    ...generateAvailableComponents(jobData),
-    resume: {
-        component: ResumeButton,
-        props: {},
-    },
-    title: {
-        component: FunkyTitle,
-        props: { title: `Greetings, Visitor #${Math.floor(Math.random() * 1000000)} !` },
-    },
-}));
-
-
-function addComponentWindow(componentKey) {
-    const componentData = availableComponents.value[componentKey];
-    if (componentData) {
-        addWindow(componentKey, componentData.component, componentData.props);
-    } else {
-        console.error("Component not found:", componentKey);
-    }
-}
-// Adds a new window to the list of windows
-function addWindow(componentKey, component, componentProps) {
-  if (nextWindowIndex.value < maxWindows) {
-    // Check if a window with the same componentKey already exists
-    const existingWindow = windows.find(
-      (window) => window.componentKey === componentKey
-    );
-
-    // If a window with the same componentKey does not exist, add a new window
-    if (!existingWindow) {
-      const id = nextWindowIndex.value++;
-      windows.push({
-        id,
-        componentKey,
-        visible: true,
-        position: { top: 50 + 30 * (id % 6), left: 50 + 30 * (id % 6) },
-        zIndex: id,
-        component,
-        props: componentProps,
-      });
-    } else {
-      // If a window with the same componentKey already exists, make it visible
-      existingWindow.visible = true;
-    }
-  }
-}
-
-
-// Handles closing a window by setting its visible property to false
-function handleClose(id) {
-    const windowToClose = windows.find((window) => window.id === id);
-    if (windowToClose) {
-        windowToClose.visible = false;
-    }
-}
-
-// Handles saving the position of a window
-function handleSavePosition(id, position) {
-    const windowToUpdate = windows.find((window) => window.id === id);
-    if (windowToUpdate) {
-        windowToUpdate.position = position;
-    }
-}
-
-// Bring a window to the front
-function bringToFront(windowToBringFront) {
-    const highestZIndex = Math.max(...windows.map((window) => window.zIndex));
-    windowToBringFront.zIndex = highestZIndex + 1;
-}
+const windows = useWindowsStore();
 </script>
 
 <template>
     <div class="main-body">
         <button class="addwindow jobcard" :style="`--index : ${index}`" v-for="(job, index) in jobData" :key="index"
-            @click="() => addComponentWindow(`jobcard_${index}`)">
+            @click="() => windows.addComponentWindow(`jobcard_${index}`)">
             Add {{ job.jobTitle }}
         </button>
-        <button class="addwindow resume" @click="addComponentWindow('resume')">Add resume Window</button>
-        <button class="addwindow title" @click="addComponentWindow('title')">Add title Window</button>
-        <WindowFrame v-for="window in windows" :key="`${window.id}`"
-            :title="`Window ${window.id}`" :position="{ ...window.position }"
-            v-show="window.visible" @close="handleClose(window.id)"
-            @save-position="(position) => handleSavePosition(window.id, position)">
+        <button class="addwindow resume" @click="windows.addComponentWindow('resume')">Add resume Window</button>
+        <button class="addwindow title" @click="windows.addComponentWindow('title')">Add title Window</button>
+        <WindowFrame v-for="window in windows" :key="`${window.id}`" :idwindow="window.id" v-show="window.visible">
             <component :is="window.component" v-bind="window.props"></component>
         </WindowFrame>
 

@@ -1,7 +1,23 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
+import { useWindowsStore } from '../stores/windowsStore';
 
-const windowRef = ref()
+const windows = useWindowsStore();
+
+const props = defineProps({
+    idwindow: Number,
+})
+const windowRef = ref();
+/* {
+    title: String,
+    position: { top: Number, left: Number },
+    zIndex: Number
+} */
+
+const getthisWindow = () => {
+    return windows.getWindowByID(props.idwindow);
+}
+const thisWindow = ref(getthisWindow());
 
 const state = reactive({
     diffX: 0,
@@ -13,13 +29,6 @@ const state = reactive({
     prevPosition: { top: 0, left: 0 },
     fullscreen: false,
 })
-
-defineProps({
-    title: String,
-    position: { top: Number, left: Number, zIndex: Number },
-})
-
-const emit = defineEmits(['save-position', 'close']);
 
 // Set the window's position
 function setPosition(top, left) {
@@ -43,7 +52,7 @@ async function dragStart(event) {
 
 // Handle dragging for desktop
 function elementDrag(event) {
-    
+
     state.diffX = state.prevX - event.clientX;
     state.diffY = state.prevY - event.clientY;
     state.prevX = event.clientX;
@@ -54,7 +63,7 @@ function elementDrag(event) {
 
 // Handle dragging for touch devices
 function touchDrag(event) {
-    
+
     if (event.changedTouches.length == 1) {
         const touch = event.changedTouches[0];
         if (touch.identifier == state.touchID) {
@@ -80,11 +89,11 @@ function closeDragElement() {
 // Collapse and expand the window
 function collapseWindow() {
     state.collapsed = !state.collapsed;
-    emit('savePosition', { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft });
+    windows.handleSavePosition(props.idwindow, { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft })
 }
 function closeWindow() {
-    emit('savePosition', { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft });
-    emit('close');
+    windows.handleSavePosition(props.idwindow, { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft })
+    windows.handleClose(window.id)
 }
 
 // Toggle fullscreen mode
@@ -95,27 +104,27 @@ function toggleFullscreen() {
         windowRef.value.style.width = '100%';
         windowRef.value.style.height = '100%';
         setPosition(0, 0);
-        emit('save-position', { top: 0, left: 0 });
+        windows.handleSavePosition(props.idwindow, { top: 0, left: 0 })
     } else {
         windowRef.value.style.width = 'auto';
         windowRef.value.style.height = 'auto';
         setPosition(state.prevPosition.top, state.prevPosition.left);
         // Restore the previous position when exiting fullscreen
-        emit('save-position', state.prevPosition);
+        windows.handleSavePosition(props.idwindow, state.prevPosition)
     }
 }
 </script>
 
 <template>
     <div class="window" ref="windowRef"
-        :style="{ top: position.top + 'px', left: position.left + 'px'}">
+        :style="{ top: thisWindow.position.top + 'px', left: thisWindow.position.left + 'px' }">
         <div class="window-header" @mousedown.prevent="dragStart" @touchstart.prevent="dragStart">
-            <span>{{ title }}</span>
+            <span>{{ thisWindow.title }}</span>
             <div class="buttons">
                 <button v-if="!state.fullscreen" @click.prevent="collapseWindow">{{ state.collapsed ? '□' : '_' }}</button>
-                <button v-if="!state.collapsed" @click.prevent="toggleFullscreen">{{ state.fullscreen ? '⛶' : '⛶' }}</button>
-                <button
-                    @click.prevent="closeWindow">X</button>
+                <button v-if="!state.collapsed" @click.prevent="toggleFullscreen">{{ state.fullscreen ? '⛶' : '⛶'
+                }}</button>
+                <button @click.prevent="closeWindow">X</button>
 
             </div>
         </div>

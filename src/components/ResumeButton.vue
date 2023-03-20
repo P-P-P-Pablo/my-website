@@ -1,9 +1,6 @@
 <script setup>
 import Arrow from '../components/Arrow.vue';
 
-defineProps({
-    src: String,
-})
 </script>
 
 <template>
