@@ -7,7 +7,7 @@ import FunkyTitle from '../components/FunkyTitle.vue';
 import jobData from '../assets/CV.json';
 
 const maxWindows = 10;
-let nextWindowIndex = ref(1);
+let nextWindowIndex = ref(0);
 const windows = reactive([])
 
 function generateAvailableComponents(jobData) {
@@ -59,14 +59,14 @@ function addWindow(componentKey, component, componentProps) {
         id,
         componentKey,
         visible: true,
-        position: { zIndex: id, top: 50 + 30 * (id % 6), left: 50 + 30 * (id % 6) },
+        position: { top: 50 + 30 * (id % 6), left: 50 + 30 * (id % 6) },
+        zIndex: id,
         component,
         props: componentProps,
       });
     } else {
       // If a window with the same componentKey already exists, make it visible
       existingWindow.visible = true;
-      bringToFront(existingWindow);
     }
   }
 }
@@ -88,10 +88,10 @@ function handleSavePosition(id, position) {
     }
 }
 
+// Bring a window to the front
 function bringToFront(windowToBringFront) {
-    const highestZIndex = Math.max(...windows.map((window) => window.position.zIndex));
-    windowToBringFront.position.zIndex = highestZIndex + 1;
-    windows.value = [...windows];
+    const highestZIndex = Math.max(...windows.map((window) => window.zIndex));
+    windowToBringFront.zIndex = highestZIndex + 1;
 }
 </script>
 
@@ -103,10 +103,10 @@ function bringToFront(windowToBringFront) {
         </button>
         <button class="addwindow resume" @click="addComponentWindow('resume')">Add resume Window</button>
         <button class="addwindow title" @click="addComponentWindow('title')">Add title Window</button>
-        <WindowFrame v-for="window in windows" :key="`${window.id}_${window.position.zIndex}`"
-            :title="`Window ${window.id}`" :style="{ zIndex: window.position.zIndex }" :position="{ ...window.position }"
+        <WindowFrame v-for="window in windows" :key="`${window.id}`"
+            :title="`Window ${window.id}`" :position="{ ...window.position }"
             v-show="window.visible" @close="handleClose(window.id)"
-            @savePosition="(position) => handleSavePosition(window.id, position)" @bringtofront="bringToFront(window)">
+            @save-position="(position) => handleSavePosition(window.id, position)">
             <component :is="window.component" v-bind="window.props"></component>
         </WindowFrame>
 

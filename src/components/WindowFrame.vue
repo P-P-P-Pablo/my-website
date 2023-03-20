@@ -19,7 +19,7 @@ defineProps({
     position: { top: Number, left: Number, zIndex: Number },
 })
 
-const emit = defineEmits(['savePosition', 'close', 'bringtofront']);
+const emit = defineEmits(['save-position', 'close']);
 
 // Set the window's position
 function setPosition(top, left) {
@@ -28,10 +28,8 @@ function setPosition(top, left) {
 }
 
 // Handle dragging start for desktop
-function dragStart(event) {
-    event.preventDefault();
+async function dragStart(event) {
     if (state.fullscreen) return;
-    emit('bringtofront');
     state.prevX = event.clientX;
     state.prevY = event.clientY;
     if (event.changedTouches && event.changedTouches.length == 1) {
@@ -45,7 +43,7 @@ function dragStart(event) {
 
 // Handle dragging for desktop
 function elementDrag(event) {
-    event.preventDefault();
+    
     state.diffX = state.prevX - event.clientX;
     state.diffY = state.prevY - event.clientY;
     state.prevX = event.clientX;
@@ -56,7 +54,7 @@ function elementDrag(event) {
 
 // Handle dragging for touch devices
 function touchDrag(event) {
-    event.preventDefault();
+    
     if (event.changedTouches.length == 1) {
         const touch = event.changedTouches[0];
         if (touch.identifier == state.touchID) {
@@ -84,38 +82,40 @@ function collapseWindow() {
     state.collapsed = !state.collapsed;
     emit('savePosition', { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft });
 }
+function closeWindow() {
+    emit('savePosition', { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft });
+    emit('close');
+}
 
 // Toggle fullscreen mode
 function toggleFullscreen() {
     state.fullscreen = !state.fullscreen;
     if (state.fullscreen) {
         state.prevPosition = { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft };
-        setPosition(0, 0);
         windowRef.value.style.width = '100%';
         windowRef.value.style.height = '100%';
-        emit('savePosition', { top: 0, left: 0 });
-        emit('bringtofront');
+        setPosition(0, 0);
+        emit('save-position', { top: 0, left: 0 });
     } else {
         windowRef.value.style.width = 'auto';
         windowRef.value.style.height = 'auto';
         setPosition(state.prevPosition.top, state.prevPosition.left);
         // Restore the previous position when exiting fullscreen
-        emit('savePosition', state.prevPosition);
+        emit('save-position', state.prevPosition);
     }
 }
 </script>
 
 <template>
-    <div class="window" :ref="windowRef"
-        :style="{ top: position.top + 'px', left: position.left + 'px', zIndex: position.zIndex }">
-        <div class="window-header" @mousedown="dragStart" @touchstart="dragStart">
+    <div class="window" ref="windowRef"
+        :style="{ top: position.top + 'px', left: position.left + 'px'}">
+        <div class="window-header" @mousedown.prevent="dragStart" @touchstart.prevent="dragStart">
             <span>{{ title }}</span>
             <div class="buttons">
-                <button v-if="!state.fullscreen" @click="collapseWindow">{{ state.collapsed ? '□' : '_' }}</button>
-                <button v-if="!state.collapsed" @click="toggleFullscreen">{{ state.fullscreen ? '⛶' : '⛶' }}</button>
-                <!-- Emit savePosition and close events with appropriate data -->
+                <button v-if="!state.fullscreen" @click.prevent="collapseWindow">{{ state.collapsed ? '□' : '_' }}</button>
+                <button v-if="!state.collapsed" @click.prevent="toggleFullscreen">{{ state.fullscreen ? '⛶' : '⛶' }}</button>
                 <button
-                    @click="() => { emit('savePosition', { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft }); emit('close'); }">X</button>
+                    @click.prevent="closeWindow">X</button>
 
             </div>
         </div>
@@ -139,6 +139,7 @@ function toggleFullscreen() {
     flex: row nowrap;
     justify-content: space-between;
     cursor: move;
+    user-select: none;
 }
 
 .content {
