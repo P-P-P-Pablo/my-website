@@ -5,12 +5,12 @@ import TestView from './views/TestView.vue';
 import { useCompStore } from './stores/availableComponentStore';
 import { useWindowsStore } from './stores/windowsStore';
 
-const components = useCompStore();
-const windows = useWindowsStore();
+const compStore = useCompStore();
+const windowsStore = useWindowsStore();
 onBeforeMount(() => {
-  components.generateAvailableComponentsFromJobData();
-  console.log('windows', windows);
-  console.log('availableComponentStore', components);
+  compStore.generateAvailableComponentsFromJobData();
+  console.log('windows', windowsStore.windows);
+  console.log('availableComponentStore', compStore.availableComponents);
 });
 </script>
 

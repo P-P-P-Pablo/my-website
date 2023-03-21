@@ -48,7 +48,7 @@ export const useCompStore = defineStore("availableComponents", () => {
     jobData.forEach((job, index) => {
         availableComponents.value.set(`jobcard_${index}`, {
             component: JobCard,
-            name: `jobcard_${index}`,
+            name: job.jobTitle,
             props: job,
           });});
   };

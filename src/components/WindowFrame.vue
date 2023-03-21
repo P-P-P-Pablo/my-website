@@ -1,8 +1,8 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, watchEffect, nextTick, onMounted } from 'vue'
 import { useWindowsStore } from '../stores/windowsStore';
 
-const windows = useWindowsStore();
+const windowsStore = useWindowsStore();
 
 const props = defineProps({
     idwindow: Number,
@@ -15,10 +15,17 @@ const windowRef = ref();
 } */
 
 const getthisWindow = () => {
-    return windows.getWindowByID(props.idwindow);
+    return windowsStore.getWindowByID(props.idwindow);
 }
 const thisWindow = ref(getthisWindow());
 
+watchEffect(() => {
+    thisWindow.value = getthisWindow();
+});
+
+onMounted(async () => {
+    await nextTick();
+  });
 const state = reactive({
     diffX: 0,
     diffY: 0,
@@ -89,11 +96,13 @@ function closeDragElement() {
 // Collapse and expand the window
 function collapseWindow() {
     state.collapsed = !state.collapsed;
-    windows.handleSavePosition(props.idwindow, { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft })
+    windowsStore.handleSavePosition(props.idwindow, { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft })
 }
+
+// Close the window
 function closeWindow() {
-    windows.handleSavePosition(props.idwindow, { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft })
-    windows.handleClose(window.id)
+    windowsStore.handleSavePosition(props.idwindow, { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft })
+    windowsStore.handleClose(props.idwindow)
 }
 
 // Toggle fullscreen mode
@@ -104,22 +113,24 @@ function toggleFullscreen() {
         windowRef.value.style.width = '100%';
         windowRef.value.style.height = '100%';
         setPosition(0, 0);
-        windows.handleSavePosition(props.idwindow, { top: 0, left: 0 })
+        windowsStore.handleSavePosition(props.idwindow, { top: 0, left: 0 })
     } else {
         windowRef.value.style.width = 'auto';
         windowRef.value.style.height = 'auto';
         setPosition(state.prevPosition.top, state.prevPosition.left);
         // Restore the previous position when exiting fullscreen
-        windows.handleSavePosition(props.idwindow, state.prevPosition)
+        windowsStore.handleSavePosition(props.idwindow, state.prevPosition)
     }
 }
 </script>
 
 <template>
-    <div class="window" ref="windowRef"
-        :style="{ top: thisWindow.position.top + 'px', left: thisWindow.position.left + 'px' }">
+    <div v-if="thisWindow" class="window" ref="windowRef" :style="{
+        top: thisWindow.position.top + 'px',
+        left: thisWindow.position.left + 'px'
+    }">
         <div class="window-header" @mousedown.prevent="dragStart" @touchstart.prevent="dragStart">
-            <span>{{ thisWindow.title }}</span>
+            <span>{{ thisWindow.name }}</span>
             <div class="buttons">
                 <button v-if="!state.fullscreen" @click.prevent="collapseWindow">{{ state.collapsed ? '□' : '_' }}</button>
                 <button v-if="!state.collapsed" @click.prevent="toggleFullscreen">{{ state.fullscreen ? '⛶' : '⛶'
