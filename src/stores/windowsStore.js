@@ -5,8 +5,7 @@ import { useCompStore } from "./availableComponentStore";
 export const useWindowsStore = defineStore("windows", () => {
   const availableComponents = useCompStore();
 
-  // i will need to use [...windows.value] to get the array corresponding to the set
-  const windows = ref(new Set());
+  const windows = ref([]);
   let nextWindowIndex = ref(0);
   const maxWindows = 10;
 
@@ -24,14 +23,14 @@ export const useWindowsStore = defineStore("windows", () => {
   const addWindow = (componentKey, componentData) => {
     if (nextWindowIndex.value < maxWindows) {
       // Check if a window with the same componentKey already exists
-      const existingWindow = [...windows.value].find(
+      const existingWindow = windows.value.find(
         (window) => window.componentKey === componentKey
       );
 
       // If a window with the same componentKey does not exist, add a new window
       if (!existingWindow) {
         const id = nextWindowIndex.value++;
-        windows.value.add({
+        windows.value.push({
           id,
           name: componentData.name,
           componentKey,
@@ -50,29 +49,43 @@ export const useWindowsStore = defineStore("windows", () => {
 
   // Returns a window by its id
   const getWindowByID = (id) => {
-    return [...windows.value].find((window) => window.id === id);
+    return windows.value.find((window) => window.id === id);
   };
 
   // Handles closing a window by setting its visible property to false
   const handleClose = (id) => {
-    const windowToClose = getWindowByID(id);
-    if (windowToClose) {
-      windowToClose.visible = false;
+    const index = windows.value.findIndex((window) => window.id === id);
+    if (index !== -1) {
+      const newWindows = windows.value.map((window) => {
+        if (window.id === id) {
+          return { ...window, visible: false };
+        } else {
+          return window;
+        }
+      });
+      windows.value = newWindows;
     }
   };
 
   // Handles saving the position of a window
   function handleSavePosition(id, position) {
-    const windowToUpdate = getWindowByID(id);
-    if (windowToUpdate) {
-      windowToUpdate.position = position;
+    const index = windows.value.findIndex((window) => window.id === id);
+    if (index !== -1) {
+      const newWindows = windows.value.map((window) => {
+        if (window.id === id) {
+          return { ...window, position: position };
+        } else {
+          return window;
+        }
+      });
+      windows.value = newWindows;
     }
   }
 
   // Bring a window to the front by setting its zIndex to the highest zIndex + 1. Temporary unused, source of bug
   function bringToFront(windowToBringFront) {
     const highestZIndex = Math.max(
-      ...[...windows.value].map((window) => window.zIndex)
+      ...windows.value.map((window) => window.zIndex)
     );
     windowToBringFront.zIndex = highestZIndex + 1;
   }

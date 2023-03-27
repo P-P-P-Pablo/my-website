@@ -86,6 +86,7 @@ function touchDrag(event) {
 
 // Handle dragging end
 function closeDragElement() {
+    windowsStore.handleSavePosition(props.idwindow, { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft })
     document.onmouseup = null;
     document.onmousemove = null;
 
