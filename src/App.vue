@@ -1,11 +1,25 @@
 <script setup>
+import { onBeforeMount } from 'vue';
 import Menu from './components/Menu.vue'
+import TestView from './views/TestView.vue';
+import { useCompStore } from './stores/availableComponentStore';
+import { useWindowsStore } from './stores/windowsStore';
+
+const compStore = useCompStore();
+const windowsStore = useWindowsStore();
+onBeforeMount(() => {
+  compStore.generateAvailableComponentsFromJobData();
+  console.log('windows', windowsStore.windows);
+  console.log('availableComponentStore', compStore.availableComponents);
+});
 </script>
 
 <template>
   <div class="app">
     <!-- <Menu /> -->
-    <router-view />
+    <!-- <router-view /> -->
+    <TestView />
+
   </div>
 </template>
 

@@ -1,31 +1,53 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, watchEffect, nextTick, onMounted } from 'vue'
+import { useWindowsStore } from '../stores/windowsStore';
 
-const window = ref(null)
+const windowsStore = useWindowsStore();
 
+const props = defineProps({
+    idwindow: Number,
+})
+const windowRef = ref();
+/* {
+    title: String,
+    position: { top: Number, left: Number },
+    zIndex: Number
+} */
+
+const getthisWindow = () => {
+    return windowsStore.getWindowByID(props.idwindow);
+}
+const thisWindow = ref(getthisWindow());
+
+watchEffect(() => {
+    thisWindow.value = getthisWindow();
+});
+
+onMounted(async () => {
+    await nextTick();
+  });
 const state = reactive({
-    pos1: 0,
-    pos2: 0,
-    pos3: 0,
-    pos4: 0,
+    diffX: 0,
+    diffY: 0,
+    prevX: 0,
+    prevY: 0,
     touchID: 0,
     collapsed: false,
     prevPosition: { top: 0, left: 0 },
     fullscreen: false,
 })
 
-defineProps({
-    title: String,
-    position: { top: Number, left: Number },
-})
+// Set the window's position
+function setPosition(top, left) {
+    windowRef.value.style.top = top + "px";
+    windowRef.value.style.left = left + "px";
+}
 
-const emit = defineEmits(['savePosition', 'close']);
-
-function dragStart(event) {
-    event.preventDefault();
+// Handle dragging start for desktop
+async function dragStart(event) {
     if (state.fullscreen) return;
-    state.pos3 = event.clientX;
-    state.pos4 = event.clientY;
+    state.prevX = event.clientX;
+    state.prevY = event.clientY;
     if (event.changedTouches && event.changedTouches.length == 1) {
         state.touchID = event.changedTouches[0].identifier;
     }
@@ -35,32 +57,36 @@ function dragStart(event) {
     document.ontouchmove = touchDrag;
 }
 
+// Handle dragging for desktop
 function elementDrag(event) {
-    event.preventDefault();
-    state.pos1 = state.pos3 - event.clientX;
-    state.pos2 = state.pos4 - event.clientY;
-    state.pos3 = event.clientX;
-    state.pos4 = event.clientY;
-    window.value.style.top = (window.value.offsetTop - state.pos2) + "px";
-    window.value.style.left = (window.value.offsetLeft - state.pos1) + "px";
+
+    state.diffX = state.prevX - event.clientX;
+    state.diffY = state.prevY - event.clientY;
+    state.prevX = event.clientX;
+    state.prevY = event.clientY;
+    windowRef.value.style.top = (windowRef.value.offsetTop - state.diffY) + "px";
+    windowRef.value.style.left = (windowRef.value.offsetLeft - state.diffX) + "px";
 }
 
+// Handle dragging for touch devices
 function touchDrag(event) {
-    event.preventDefault();
+
     if (event.changedTouches.length == 1) {
         const touch = event.changedTouches[0];
         if (touch.identifier == state.touchID) {
-            state.pos1 = state.pos3 - touch.clientX;
-            state.pos2 = state.pos4 - touch.clientY;
-            state.pos3 = touch.clientX;
-            state.pos4 = touch.clientY;
-            window.value.style.top = (window.value.offsetTop - state.pos2) + "px";
-            window.value.style.left = (window.value.offsetLeft - state.pos1) + "px";
+            state.diffX = state.prevX - touch.clientX;
+            state.diffY = state.prevY - touch.clientY;
+            state.prevX = touch.clientX;
+            state.prevY = touch.clientY;
+            windowRef.value.style.top = (windowRef.value.offsetTop - state.diffY) + "px";
+            windowRef.value.style.left = (windowRef.value.offsetLeft - state.diffX) + "px";
         }
     }
 }
 
+// Handle dragging end
 function closeDragElement() {
+    windowsStore.handleSavePosition(props.idwindow, { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft })
     document.onmouseup = null;
     document.onmousemove = null;
 
@@ -68,41 +94,50 @@ function closeDragElement() {
     document.ontouchmove = null;
 }
 
+// Collapse and expand the window
 function collapseWindow() {
     state.collapsed = !state.collapsed;
-    emit('savePosition', { top: window.value.offsetTop, left: window.value.offsetLeft });
+    windowsStore.handleSavePosition(props.idwindow, { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft })
 }
 
+// Close the window
+function closeWindow() {
+    windowsStore.handleSavePosition(props.idwindow, { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft })
+    windowsStore.handleClose(props.idwindow)
+}
+
+// Toggle fullscreen mode
 function toggleFullscreen() {
     state.fullscreen = !state.fullscreen;
     if (state.fullscreen) {
-        state.prevPosition = { top: window.value.offsetTop, left: window.value.offsetLeft };
-        window.value.style.top = 0 + "px";
-        window.value.style.left = 0 + "px";
-        window.value.style.width = '100%';
-        window.value.style.height = '100%';
-        emit('savePosition', { top: 0, left: 0 });
+        state.prevPosition = { top: windowRef.value.offsetTop, left: windowRef.value.offsetLeft };
+        windowRef.value.style.width = '100%';
+        windowRef.value.style.height = '100%';
+        setPosition(0, 0);
+        windowsStore.handleSavePosition(props.idwindow, { top: 0, left: 0 })
     } else {
-        window.value.style.width = 'auto';
-        window.value.style.height = 'auto';
-        window.value.style.top = state.prevPosition.top + "px";
-        window.value.style.left = state.prevPosition.left + "px";
+        windowRef.value.style.width = 'auto';
+        windowRef.value.style.height = 'auto';
+        setPosition(state.prevPosition.top, state.prevPosition.left);
         // Restore the previous position when exiting fullscreen
-        emit('savePosition', state.prevPosition);
+        windowsStore.handleSavePosition(props.idwindow, state.prevPosition)
     }
 }
-
 </script>
 
 <template>
-    <div class="window" ref="window" :style="{ top: position.top + 'px', left: position.left + 'px' }">
-        <div class="window-header" @mousedown="dragStart" @touchstart="dragStart">
-            <span>{{ title }}</span>
+    <div v-if="thisWindow" class="window" ref="windowRef" :style="{
+        top: thisWindow.position.top + 'px',
+        left: thisWindow.position.left + 'px'
+    }">
+        <div class="window-header" @mousedown.prevent="dragStart" @touchstart.prevent="dragStart">
+            <span>{{ thisWindow.name }}</span>
             <div class="buttons">
-                <button @click="collapseWindow">{{ state.collapsed ? '□' : '_' }}</button>
-                <button @click="toggleFullscreen">{{ state.fullscreen ? '⛶' : '⛶' }}</button>
-                <button
-                    @click="$emit('savePosition', { top: window.value.offsetTop, left: window.value.offsetLeft }); $emit('close');">X</button>
+                <button v-if="!state.fullscreen" @click.prevent="collapseWindow">{{ state.collapsed ? '□' : '_' }}</button>
+                <button v-if="!state.collapsed" @click.prevent="toggleFullscreen">{{ state.fullscreen ? '⛶' : '⛶'
+                }}</button>
+                <button @click.prevent="closeWindow">X</button>
+
             </div>
         </div>
         <div class="content" :class="state.collapsed ? 'collapsed' : ''">
@@ -110,7 +145,6 @@ function toggleFullscreen() {
         </div>
     </div>
 </template>
-
 
 <style scoped>
 .window {
@@ -126,8 +160,8 @@ function toggleFullscreen() {
     flex: row nowrap;
     justify-content: space-between;
     cursor: move;
+    user-select: none;
 }
-
 
 .content {
     height: fit-content;
@@ -142,3 +176,4 @@ function toggleFullscreen() {
     display: none;
 }
 </style>
+
