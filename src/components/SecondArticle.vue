@@ -118,6 +118,8 @@ function toggleContent() {
                         but I wanted to add some activities to the site. This thing isn't very technically advanced or even
                         fun to play either, but I like the idea of having a reason to spend some time on this site.
                         Something to think about! </li>
+                    <li>Last but not least, this website is in english because i'm dumb and i'm too used to work in english.
+                        So i will need at least a french version.</li>
                 </ul>
             </div>
         </div>
