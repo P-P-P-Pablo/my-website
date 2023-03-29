@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watchEffect, nextTick, onMounted } from 'vue'
+import { ref, reactive, watchEffect, nextTick, onMounted, computed } from 'vue'
 import { useWindowsStore } from '../stores/windowsStore';
 
 const windowsStore = useWindowsStore();
@@ -25,7 +25,7 @@ watchEffect(() => {
 
 onMounted(async () => {
     await nextTick();
-  });
+});
 const state = reactive({
     diffX: 0,
     diffY: 0,
@@ -123,6 +123,17 @@ function toggleFullscreen() {
         windowsStore.handleSavePosition(props.idwindow, state.prevPosition)
     }
 }
+
+const getClass = computed(() => {
+    let classes = "";
+    if (state.collapsed) {
+        classes += "collapsed";
+    }
+    if (!state.fullscreen) {
+        classes += " normal";
+    }
+    return classes;
+})
 </script>
 
 <template>
@@ -140,7 +151,7 @@ function toggleFullscreen() {
 
             </div>
         </div>
-        <div class="content" :class="state.collapsed ? 'collapsed' : ''">
+        <div class="content" :class="getClass">
             <slot></slot>
         </div>
     </div>
@@ -151,6 +162,8 @@ function toggleFullscreen() {
     position: fixed;
     border: 3px solid #f1f1f1;
     box-shadow: 8px 10px 4px rgba(100, 100, 100, 0.3);
+    background-color: var(--lemon-yellow-crayola);
+    opacity: 0.99;
 }
 
 .window-header {
@@ -164,8 +177,9 @@ function toggleFullscreen() {
 }
 
 .content {
-    height: fit-content;
-    width: fit-content;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
 }
 
 .buttons {
@@ -175,5 +189,12 @@ function toggleFullscreen() {
 .collapsed {
     display: none;
 }
+
+.normal {
+
+    max-height: 80vh;
+    max-width: 60vw;
+}
+
 </style>
 

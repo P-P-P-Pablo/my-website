@@ -13,7 +13,7 @@ function toggleContent() {
     <div class="article">
         <a class="github" :class="showFullContent ? 'visible' : ''" href="https://github.com/P-P-P-Pablo/my-website"
             target="blank"> <img src="../assets/Github.svg" /></a>
-        <div @click="toggleContent">
+        <div class="intro" @click="toggleContent">
             <h2>My website</h2>
             <p>The first version of my website is finished! YAY \o/</p>
             <p>
@@ -147,14 +147,16 @@ function toggleContent() {
                     short
                     description and some screenshots.</p>
             </div>
-            <p>To finish, I would say that I have succeeded in what I wanted to do when I started this. I have a clean
-                site
-                that is presentable to professionals. For sure it could be nicer but I intend to keep working on it. I
-                already have many ideas for the 2nd version ;) Before that, I'm going to do the mobile version first
-                since
-                the display is DISGUSTING on phones.</p>
-            <p>There is a link to the github of the project at the top. Feel free to take a look or comment on it, even
-                if it's not really documented it should be easily readable.</p>
+            <div class="conclu">
+                <p>To finish, I would say that I have succeeded in what I wanted to do when I started this. I have a clean
+                    site
+                    that is presentable to professionals. For sure it could be nicer but I intend to keep working on it. I
+                    already have many ideas for the 2nd version ;) Before that, I'm going to do the mobile version first
+                    since
+                    the display is DISGUSTING on phones.</p>
+                <p>There is a link to the github of the project at the top. Feel free to take a look or comment on it, even
+                    if it's not really documented it should be easily readable.</p>
+            </div>
         </div>
         <div class="seemore" @click="toggleContent">
             {{ showFullContent ? 'See less' : 'See more' }}
@@ -164,12 +166,9 @@ function toggleContent() {
   
 <style scoped>
 .article {
-    max-width: 1000px;
-    border-radius: 30px;
     background: hsla(217, 100%, 81%, 0.5);
     box-shadow: 8px 10px 4px rgba(100, 100, 100, 0.3);
     padding: 20px;
-
     font-family: 'Press Start 2P';
 }
 
@@ -181,16 +180,13 @@ p {
 
 img {
     margin: 10px;
+    max-height: 250px;
 }
 
 .part {
     padding-left: 30px;
 }
 
-img {
-    max-height: 250px;
-
-}
 
 .row {
     display: flex;
