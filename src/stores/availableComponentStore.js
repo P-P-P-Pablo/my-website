@@ -5,7 +5,9 @@ import ResumeButton from "../components/ResumeButton.vue";
 import JobCard from "../components/JobCard.vue";
 import AboutMe from "../components/AboutMe.vue";
 import FirstArticle from "../components/FirstArticle.vue";
+import SecondArticle from "../components/SecondArticle.vue";
 import CatSlider from "../components/PhotoSlider.vue";
+import Pong from "../components/Pong.vue";
 
 
 export const useCompStore = defineStore("availableComponents", () => {
@@ -38,10 +40,28 @@ export const useCompStore = defineStore("availableComponents", () => {
         },
       ],
       [
+        'secondarticle',
+        {
+          component: SecondArticle,
+          name: "V2 of this website",
+          props: {
+          },
+        },
+      ],
+      [
         'catslider',
         {
           component: CatSlider,
           name: "Lots of cats",
+          props: {
+          },
+        },
+      ],
+      [
+        'pong',
+        {
+          component: Pong,
+          name: "P-P-P-Pong",
           props: {
           },
         },

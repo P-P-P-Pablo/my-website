@@ -24,6 +24,7 @@ const addPreviousPositionWindow = () => {
 
 const addProjectsWindow = () => {
     windowsStore.addComponentWindow('firstarticle');
+    windowsStore.addComponentWindow('secondarticle');
 }
 </script>
 
@@ -40,8 +41,12 @@ const addProjectsWindow = () => {
                 <img src="../assets/001-project.png" alt="My previous projects"/>
             </Button3D>
             <Button3D @click="windowsStore.addComponentWindow('catslider');" alt="Cats">
-                <img src="../assets/cat.svg"
+                <img src="../assets/cat.png"
                     alt="Cat" />
+            </Button3D>
+            <Button3D @click="windowsStore.addComponentWindow('pong');" alt="P-P-P-Pong">
+                <img src="../assets/console.png"
+                    alt="P-P-P-Pong" />
             </Button3D>
         </div>
         <ResumeButton class="resume" />
@@ -70,7 +75,7 @@ img {
     left: 0;
     right: 0;
     margin: auto;
-    z-index: -4;
+    z-index: 0;
 }
 
 .funky {

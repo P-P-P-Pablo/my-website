@@ -11,8 +11,6 @@ function toggleContent() {
 
 <template>
     <div class="article">
-        <a class="github" :class="showFullContent ? 'visible' : ''" href="https://github.com/P-P-P-Pablo/my-website"
-            target="blank"> <img src="../assets/Github.svg" /></a>
         <div class="intro" @click="toggleContent">
             <h2>My website</h2>
             <p>The first version of my website is finished! YAY \o/</p>
@@ -172,15 +170,15 @@ function toggleContent() {
     font-family: 'Press Start 2P';
 }
 
-p {
-    font-size: 14px;
-    line-height: 16px;
-    text-align: justify;
-}
-
 img {
     margin: 10px;
     max-height: 250px;
+}
+
+h3,
+h2 {
+    text-decoration: underline;
+    margin-top: 10px;
 }
 
 .part {
@@ -217,13 +215,7 @@ img {
     transition: all .2s;
 }
 
-.github {
-    position: fixed;
-    top: 150px;
-    right: 15px;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
+
 
 .visible {
     opacity: 1;
