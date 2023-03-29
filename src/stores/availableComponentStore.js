@@ -2,10 +2,10 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import jobData from "../assets/CV.json";
 import ResumeButton from "../components/ResumeButton.vue";
-import FunkyTitle from "../components/FunkyTitle.vue";
 import JobCard from "../components/JobCard.vue";
 import AboutMe from "../components/AboutMe.vue";
 import FirstArticle from "../components/FirstArticle.vue";
+import CatSlider from "../components/PhotoSlider.vue";
 
 
 export const useCompStore = defineStore("availableComponents", () => {
@@ -33,6 +33,15 @@ export const useCompStore = defineStore("availableComponents", () => {
         {
           component: FirstArticle,
           name: "V1.0 of this website",
+          props: {
+          },
+        },
+      ],
+      [
+        'catslider',
+        {
+          component: CatSlider,
+          name: "Lots of cats",
           props: {
           },
         },

@@ -31,13 +31,17 @@ const addProjectsWindow = () => {
     <div class="main-body">
         <div class="button-list">
             <Button3D @click="windowsStore.addComponentWindow('aboutme');" alt="About me">
-                <img src="../assets/003-user.png" />
+                <img src="../assets/003-user.png" alt="About me"/>
             </Button3D>
             <Button3D @click="addPreviousPositionWindow" alt="My previous positions">
-                <img src="../assets/002-cv.png" />
+                <img src="../assets/002-cv.png" alt="My previous positions"/>
             </Button3D>
             <Button3D @click="addProjectsWindow" alt="My previous projects">
-                <img src="../assets/001-project.png" />
+                <img src="../assets/001-project.png" alt="My previous projects"/>
+            </Button3D>
+            <Button3D @click="windowsStore.addComponentWindow('catslider');" alt="Cats">
+                <img src="../assets/cat.svg"
+                    alt="Cat" />
             </Button3D>
         </div>
         <ResumeButton class="resume" />
@@ -55,7 +59,10 @@ const addProjectsWindow = () => {
     height: 99%;
     width: 99%;
 }
-
+img {
+    width: 30px;
+    height: auto;
+}
 .resume {
     position: absolute;
     top: 0;
