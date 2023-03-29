@@ -5,7 +5,7 @@ import Navigation from './Navigation.vue';
 
 <template>
     <div class="main-menu">
-        <img class="logo" src="..\assets\logo2.png" />
+        <!-- <img class="logo" src="..\assets\logo2.png" /> -->
         <Navigation />
     </div>
 </template>

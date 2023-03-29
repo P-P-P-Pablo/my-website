@@ -48,8 +48,6 @@ a {
 .resume-container {
     width: 200px;
     height: 200px;
-    position: relative;
-    top: 20px;
     margin: 50px;
 
     display: flex;

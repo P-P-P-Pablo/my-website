@@ -2,8 +2,11 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import jobData from "../assets/CV.json";
 import ResumeButton from "../components/ResumeButton.vue";
-import FunkyTitle from "../components/FunkyTitle.vue";
 import JobCard from "../components/JobCard.vue";
+import AboutMe from "../components/AboutMe.vue";
+import FirstArticle from "../components/FirstArticle.vue";
+import CatSlider from "../components/PhotoSlider.vue";
+
 
 export const useCompStore = defineStore("availableComponents", () => {
   const availableComponents = ref(
@@ -17,32 +20,35 @@ export const useCompStore = defineStore("availableComponents", () => {
         },
       ],
       [
-        'title',
+        'aboutme',
         {
-          component: FunkyTitle,
-          name: "Funky Title",
+          component: AboutMe,
+          name: "About Me",
           props: {
-            title: "Funky Title",
+          },
+        },
+      ],
+      [
+        'firstarticle',
+        {
+          component: FirstArticle,
+          name: "V1.0 of this website",
+          props: {
+          },
+        },
+      ],
+      [
+        'catslider',
+        {
+          component: CatSlider,
+          name: "Lots of cats",
+          props: {
           },
         },
       ],
     ])
   );
 
-  /*  {
-    resume:{
-        component: ResumeButton,
-        name: "Download my resume",
-        props: {}
-    },
-    title:{
-        component: FunkyTitle,
-        name: "Funky Title",
-        props: {
-            title: "Funky Title"
-        }
-    }
-  }); */
 
   const generateAvailableComponentsFromJobData = () => {
     jobData.forEach((job, index) => {
@@ -53,15 +59,6 @@ export const useCompStore = defineStore("availableComponents", () => {
           });});
   };
 
-  /* const generateAvailableComponentsFromJobData = () => {
-    jobData.forEach((job, index) => {
-      availableComponents[`jobcard_${index}`] = {
-        component: JobCard,
-        name: `jobcard_${index}`,
-        props: job,
-      };
-    });
-  }; */
 
   /* componentObj = {
         component: a vue component,
