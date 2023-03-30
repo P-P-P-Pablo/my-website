@@ -1,60 +1,58 @@
 <script setup>
-import PhotoSlider from '../components/PhotoSlider.vue';
+
+import Button3D from '../components/3DButton.vue';
+import ResumeButton from '../components/ResumeButton.vue';
 import Title from '../components/Title.vue';
-import FunkyTitle from '../components/FunkyTitle.vue';
-import { onMounted, reactive } from 'vue';
+import { reactive, onMounted } from 'vue';
 
 const state = reactive({
-    visitorNo: 0
+    screenWidth: 0
 })
 
 onMounted(() => {
-    state.visitorNo = Math.floor(Math.random() * 1000000);
-})
+    state.screenWidth = window.innerWidth;
+    console.log(state.screenWidth)
+});
 
 </script>
 
 <template>
     <div class="main-body">
-        <!-- <FunkyTitle :title="`Greetings, Visitor #${state.visitorNo} !`" /> -->
-        <Title title='About Me' />
+        <Title title='Hello' />
 
         <div class="pres">
             <p>Hey there!</p>
-            <p>My name is Pablo and I'm a web developer who's all about having a good time. When I'm not coding away,
-                you can usually find me gaming, playing board games, or hanging with my friends. Cooking and movies are
-                also a big part of my life, but I try to steer clear of horses (idk why they hate me) and working out.
-                If you're a cat person, we already have something in common.</p>
-            <PhotoSlider />
-            <p>My background is a little unconventional. I started out studying chemistry in hopes of making all the
-                candies I could ever want, but eventually realized that water management was a more ethical and
-                environmentally-friendly path. I've had a variety of jobs, including working in restaurants,
-                construction, and even childcare. But my hobby of writing novels and articles led me to coding, and I
-                fell in love with it.</p>
-            <p>I honed my skills at Human Booster and the Wild Code School, and got my feet wet with a traineeship at
-                360Medics. My most recent gig was as an Industry 4.0 Analyst, but now I'm on the hunt for a new
-                challenge that's both fun and fulfilling.</p>
+            <p>My name is Pablo and I'm a web developer. You are about to see my personal website. </p>
+            <p>This a showcase of my skills. I don't want to brag about it because I don't think that's really something exceptional.</p>
+            <p>I'm still working on the mobile version. Technically it works, but this is not the optimal way to check this website because you need a bigger screen to really interact with this website. There is not a lot of content, for now, and the website is mainly to help me find a job so, if you're a mobile user, you should find a button to download my resume below and I invite you to come back on a bigger screen.</p>
+            <p>I would also strongly advise you to check out the Github repo of this site, you can find it the "projects" part.</p>
         </div>
+        <ResumeButton class="resume" />
+        <Button3D class="enter" alt="" href="/home">Let's go !</Button3D>
     </div>
 </template>
 
 <style scoped>
-@media (min-width: 900px) {
-    .main-body {
-        margin-top: -150px;
-    }
-}
-
-@media (max-width: 1000px) {
-    .photoslider {
-        display: none;
-    }
-}
-
 .pres {
     font-family: 'Press Start 2P';
     width: 100%;
     max-width: 1000px;
+}
+
+.resume {
+    position: relative;
+}
+
+@media screen and (max-width: 600px) {
+    .enter {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 601px) {
+    .resume {
+        display: none;
+    }
 }
 
 p {

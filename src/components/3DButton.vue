@@ -3,6 +3,10 @@ defineProps({
     alt: {
         type: String,
         default: "Button"
+    },
+    href:{
+        type: String,
+        default: "#"
     }
 })
 </script>
@@ -10,7 +14,7 @@ defineProps({
 <template>
     <div class="button-container">
         <div class="button">
-            <a href="#">
+            <a :href="href">
                 <slot></slot>
             </a>
         </div>
