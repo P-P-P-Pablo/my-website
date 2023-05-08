@@ -12,15 +12,6 @@ const state = reactive({
 const inner = ref(null)
 
 function focusAnotherPhoto(index) {
-    /* if (index == state.photolist.length - 1) {
-        state.photolist.push(state.photolist.shift());
-        state.currentPhoto = index - 1;
-    } else if (index == 0) {
-        state.photolist.unshift(state.photolist.pop());
-        state.currentPhoto = index + 1;
-    } else {
-        state.currentPhoto = index;
-    } */
     state.currentPhoto = index;
     if (index == state.photolist.length - 2 && state.photolist.length < 50) {
         getCats()
