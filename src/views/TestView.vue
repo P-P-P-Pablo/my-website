@@ -1,11 +1,9 @@
 <script setup>
-import CopiTest from '../components/CopiTest.vue';
 
 </script>
 
 <template>
     <div class="main-body">
-        <CopiTest />
     </div>
 </template>
 
