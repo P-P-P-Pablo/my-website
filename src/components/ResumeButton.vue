@@ -5,17 +5,17 @@ import Arrow from '../components/Arrow.vue';
 
 <template>
     <div class="resume-container">
-        <Arrow class="top" scale-max="1.3" scale-min="0.8" />
-        <Arrow class="top-left" width="50" length="50" rotation="-50" delay="300" />
-        <Arrow class="left" rotation="-90" delay="50" />
-        <Arrow class="top-right" width="20" length="20" rotation="40" scale-max="1.8" delay="300" />
+        <Arrow class="top" :scale-max="1.3" :scale-min="0.8" />
+        <Arrow class="top-left" :width="50" :length="50" :rotation="-50" :delay="300" />
+        <Arrow class="left" :rotation="-90" :delay="50" />
+        <Arrow class="top-right" :width="20" :length="20" :rotation="40" :scale-max="1.8" :delay="300" />
         <a class="download" target="_blank" href="CVPVI2023.pdf">Click here to download my resume</a>
 
-        <Arrow class="bottom-left" width="75" length="75" rotation="-135" scale-min="0.7" />
-        <Arrow class="bottom" rotation="-180" scale-min="0.7" scale-max="1.5" delay="500" />
-        <Arrow class="near-bottom" rotation="150" width="30" length="30" scale-max="1.5" delay="50" />
-        <Arrow class="bottom-right" width="75" length="75" rotation="130" scale-max="1.2" delay="200" />
-        <Arrow class="right" rotation="85" scale-max="1.3" scale-min="0.8" delay="150" />
+        <Arrow class="bottom-left" :width="75" :length="75" :rotation="-135" :scale-min="0.7" />
+        <Arrow class="bottom" :rotation="-180" :scale-min="0.7" :scale-max="1.5" :delay="500" />
+        <Arrow class="near-bottom" :rotation="150" :width="30" :length="30" :scale-max="1.5" :delay="50" />
+        <Arrow class="bottom-right" :width="75" :length="75" :rotation="130" :scale-max="1.2" :delay="200" />
+        <Arrow class="right" :rotation="85" :scale-max="1.3" :scale-min="0.8" :delay="150" />
     </div>
 </template>
 
