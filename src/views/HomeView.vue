@@ -5,9 +5,7 @@ import Title from '../components/Title.vue';
 
 //Wait for the animation to end before going to the windows page
 const animTimer = () => {
-    console.log('Top')
     setTimeout(() => {
-        console.log('go')
         window.location.href = '/home';
     }, 2700);
 }
