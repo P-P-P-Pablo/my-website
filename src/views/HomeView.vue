@@ -54,10 +54,10 @@ const animTimer = () => {
 
 @media screen and (min-width: 601px) {
     .resume {
+
         display: none;
     }
 }
-
 @media screen and (max-height: 1200px) and (min-width: 601px) {
     .lastp {
         margin-top: 150px;
